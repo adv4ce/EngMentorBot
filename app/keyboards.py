@@ -84,6 +84,7 @@ async def rus_learning_kb(tg_id, correct_word):
     )
     return keyboard
 
+
 async def words_quantity(tg_id):
     keyboard = InlineKeyboardBuilder()
     data = await rq.get_words(tg_id)
