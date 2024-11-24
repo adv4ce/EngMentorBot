@@ -99,9 +99,14 @@ async def add_rus_word(message: Message, state: FSMContext):
     data = await state.get_data()
     check = await rq.set_words(message.from_user.id, [data[i] for i in data.keys()])
     if check:
-        await message.answer(f"Слово: {data['word_eng']} уже есть в твоей коллекции", reply_markup=kb.main)
+        await message.answer(
+            f"Слово: {data['word_eng']} уже есть в твоей коллекции",
+            reply_markup=kb.main,
+        )
     else:
-        await message.answer(f"Слово {data['word_eng']} добавлено", reply_markup=kb.main)
+        await message.answer(
+            f"Слово {data['word_eng']} добавлено", reply_markup=kb.main
+        )
         await message.answer(
             f"Твои слова", reply_markup=await kb.words_quantity(message.from_user.id)
         )
@@ -165,11 +170,12 @@ async def rus_learning(message, state, tg_id):
     await state.set_state(Ans.user_answer)
     await state.update_data(cur_state=2)
 
+
 @r.message(Ans.user_answer)
 async def user_answ(message: Message, state: FSMContext):
     await state.update_data(user_answer=message.text)
     data = await state.get_data()
-    cur_state = data['cur_state']
+    cur_state = data["cur_state"]
     if cur_state == 1:
         check_answer = await rq.check_eng_answer(
             message.from_user.id, data["question"], data["user_answer"]
@@ -197,6 +203,7 @@ async def user_answ(message: Message, state: FSMContext):
     else:
         await bad_answer(message, state)
 
+
 async def eng_learning(message, state, tg_id):
     question = await rq.random_words(tg_id)
     question = question[0]
@@ -213,6 +220,7 @@ async def eng_learning(message, state, tg_id):
     )
     await state.set_state(Ans.user_answer)
     await state.update_data(cur_state=1)
+
 
 async def bad_answer(message, state):
     data = await state.get_data()
